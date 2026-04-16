@@ -1,0 +1,10 @@
+venv/
+.buildozer/
+bin/
+__pycache__/
+*.pyc
+*.pyo
+*.dylib
+model.h5
+model.keras
+*.tflite
