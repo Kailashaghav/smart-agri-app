@@ -5,27 +5,37 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
 
-      - name: Set up Python
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
       - name: Install dependencies
         run: |
-          pip install buildozer cython virtualenv
+          sudo apt-get update
           sudo apt-get install -y \
             python3-pip python3-dev \
+            git zip unzip openjdk-17-jdk \
             libffi-dev libssl-dev \
-            zlib1g-dev git unzip
+            zlib1g-dev
+
+      - name: Install Python packages
+        run: |
+          pip install --upgrade pip
+          pip install buildozer cython virtualenv
 
       - name: Build APK
-        run: buildozer android debug
+        run: |
+          buildozer init || true
+          buildozer android debug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: SmartAgriApp
           path: bin/*.apk
